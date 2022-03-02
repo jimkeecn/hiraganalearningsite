@@ -9,20 +9,15 @@ import { Card } from 'src/model/model';
 export class CardComponent implements OnInit {
 
   @Input() card: Card;
-  @Output() submit = new EventEmitter();
 
-  answer : string = "";
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  submitanswer(): void{
-    if (this.answer == this.card.answer) {
-      
-    } else {
-      
-    }
+
+  getSrc(): string {
+    return '/assets/img/cards/' + this.card.answer.toLowerCase() + '.png';
   }
 
 }

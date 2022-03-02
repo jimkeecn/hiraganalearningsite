@@ -196,22 +196,22 @@
     },
     {
         "category":"r",
-        "answer":"li",
+        "answer":"ri",
         "url":""
     },
     {
         "category":"r",
-        "answer":"lu",
+        "answer":"ru",
         "url":""
     },
     {
         "category":"r",
-        "answer":"le",
+        "answer":"re",
         "url":""
     },
     {
         "category":"r",
-        "answer":"lo",
+        "answer":"ro",
         "url":""
     },
     {
@@ -220,22 +220,22 @@
         "url":""
     },
     {
-        "category":"r",
+        "category":"w",
         "answer":"wi",
         "url":""
     },
     {
-        "category":"r",
+        "category":"w",
         "answer":"we",
         "url":""
     },
     {
-        "category":"r",
+        "category":"w",
         "answer":"wo",
         "url":""
     },
     {
-        "category":"r",
+        "category":"w",
         "answer":"n",
         "url":""
     }
