@@ -1,11 +1,19 @@
 <div class="panel">
   <div class="row" *ngIf="!user">
+    <h1>Learning Hiragana</h1>
+    <h3>This is only a tool I have developed for myself learning hiragana. 
+      it allow me to remember the <b>hiragana</b> progressively. it's free to use for everyone</h3>
+    <p>You need complete each test to progress. 
+      there will be cooldown between each test. it's not recommanded to skip cooldown. it allow time for you consume your knowledge.</p>
+    <p>Each test only has <b>1 hour</b> to finish, you will need to start again if you run out of time.</p>
+    <p>This learing tool only work for if you use the same browser with cache on (not Incognito mode).
+       If you clear your cache during the progress, you will lose all your progress and you have to start over. </p>
     <label>Select Level</label>
     <select>
       <option>Progresive</option>
       <option>All(Not supported)</option>
     </select>
-    <button type="button" (click)="newProfile()">Start</button>
+    <button type="button" class="start-button" (click)="newProfile()">Start</button>
   </div>
 </div>
 <ng-container *ngIf="user">
@@ -14,7 +22,7 @@
     <button type="button" (click)="service.resetProgress()">Reset Progress</button>
   </div>
   <div class="progress-bar">
-    <div>{{user.progress * 5}}% / remaining words : {{user.currentDeck.length}}</div>
+    <div>{{user.progress * 5}}% / words : {{user.currentDeck.length}}</div>
     <span class="bar" [style.width.%]="user.progress * 5"></span>
   </div>
   <div class="body">

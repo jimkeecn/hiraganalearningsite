@@ -260,7 +260,8 @@ export class HiraganaService{
 
      //If the current Time is over the finishTime, redo whole process
      let date_finished = user.finishTimer;
-     if (date_now.getTime() > date_finished.getTime()) {
+    if (date_now.getTime() > date_finished.getTime()) {
+      alert(`Sorry, You have ran out of time, the test is restart again.`);
        let new_finish_time = date_now;
        let new_deck = this.getWords(user.progress);
        user.currentDeck = new_deck;
