@@ -179,34 +179,64 @@ export class HiraganaService{
 
    
 
-    console.log(duplicate_deck);
     return duplicate_deck;
     
   }
 
   getShuffleWords(array: Card[]) {
-    let currentIndex = array.length,  randomIndex;
-
-    // While there remain elements to shuffle...
-    while (currentIndex != 0) {
-  
-      // Pick a remaining element...
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-  
-      
-      if (randomIndex > 0) {
-        if (array[currentIndex].answer == array[randomIndex - 1].answer
-          || array[currentIndex].answer == array[randomIndex + 1].answer) {
-          continue;
+    //First shuffle..
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor( Math.random() * (i - 1));
+      if (j > 0) {
+        //make sure there are no simliar value around position i and j
+        if (array[i]?.answer !== array[j - 1]?.answer
+          && array[i]?.answer !== array[j + 1]?.answer
+          && array[i]?.answer !== array[j - 1]?.answer
+          && array[i]?.answer !== array[j + 1]?.answer) {
+          [array[i], array[j]] = [array[j], array[i]];
         }
-        // And swap it with the current element.
-      [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex], array[currentIndex]];
       } else {
-        continue;
+        if (array[i]?.answer !== array[j + 1]?.answer) {
+          [array[i], array[j]] = [array[j], array[i]];
+        } 
       }
     }
+
+    const before = [...array];
+    console.log(before);
+    //Checking duplicate and swap with other value
+    for (let x = 0; x < array.length; x++){
+      if (array[x].answer == array[x + 1]?.answer) {
+        console.log(x,array[x])
+        for (let y = 0; y < array.length; y++){
+          //make sure there are no simliar value around position x and y
+          if (array[y]?.answer !== array[x]?.answer
+            && array[y + 1]?.answer !== array[x].answer
+            && array[y - 1]?.answer !== array[x].answer
+            && array[y]?.answer !== array[x+1]?.answer
+            && array[y]?.answer !== array[x-1]?.answer
+          ) {
+            console.log(y, array[y]);
+            if (x < y) {
+              [array[x], array[y]] = [array[y], array[x]];
+            } else {
+              [array[y], array[x]] = [array[x], array[y]];
+            }
+            
+            break;
+          }
+        }
+      }
+    }
+
+    //just another caculate if there is duplication left (for testing purpose)
+    let dup = 0;
+    for (let x = 0; x < array.length; x++){
+      if (array[x].answer == array[x + 1]?.answer) {
+        dup++;
+      }
+    }
+    console.log(array, dup);
     return array;
   }
 
@@ -220,7 +250,7 @@ export class HiraganaService{
       }
     }
     currentDeck.push(falseCard)
-
+    return currentDeck;
   }
 
   submit(answer): any{
@@ -255,7 +285,9 @@ export class HiraganaService{
       if (user.currentDeck[0].isFalse != true) {
         user.currentDeck[0].isFalse = true;
         if (user.currentDeck.length <= 5) {
-          this.get5RandomWordsFromUsedCard(user.currentDeck,user.usedDeck,user.currentDeck[0])
+          debugger;
+          let currentDeck = this.get5RandomWordsFromUsedCard(user.currentDeck, user.usedDeck, user.currentDeck[0])
+          user.currentDeck = currentDeck;
         } else {
           user.currentDeck.push(user.currentDeck[0]);
         }
@@ -289,6 +321,12 @@ export class HiraganaService{
     }
   }
 
+  removeCooldownTimer() {
+    let user = { ...this.user$.value };
+    user.cooldownTimer = new Date();
+    this.setUser(user);
+  }
+
 
   
 
@@ -301,7 +339,13 @@ export class HiraganaService{
     return user.progress;
   }
 
+  resetProgress() {
+    localStorage.removeItem('hiragana_user');
+    this.user$.next(null);
+    location.reload();
+  }
   createNewUserProfile() {
+    localStorage.removeItem('hiragana_user');
     let date_now = new Date();
     date_now.setHours(date_now.getHours() + 1);
     let profile: User = {
@@ -312,11 +356,7 @@ export class HiraganaService{
       finishTimer: date_now,
       usedDeck: []
     }
-    localStorage.setItem('hiragana_user', JSON.stringify(profile));
-    this.user$.next(profile);
-
-    //Run Finish Time Clock
-
+    this.setUser(profile);
   }
 
   setUser(profile) {

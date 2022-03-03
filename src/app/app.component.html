@@ -9,6 +9,10 @@
   </div>
 </div>
 <ng-container *ngIf="user">
+  <div class="action-bar">
+    <button type="button" (click)="service.removeCooldownTimer()">Remove Cooldown Timer</button>
+    <button type="button" (click)="service.resetProgress()">Reset Progress</button>
+  </div>
   <div class="progress-bar">
     <div>{{user.progress * 5}}% / remaining words : {{user.currentDeck.length}}</div>
     <span class="bar" [style.width.%]="user.progress * 5"></span>

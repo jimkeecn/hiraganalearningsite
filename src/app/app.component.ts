@@ -14,7 +14,12 @@ export class AppComponent {
   answer: string = "";
   constructor(public service :HiraganaService) {
     console.log(new Date().getHours())
-    this.setCard()
+    this.service.user$.subscribe(user => { 
+      if (user) {
+        this.user = user;
+        this.setCard()
+      }
+    })
   }
 
   submitanswer(){
@@ -33,7 +38,7 @@ export class AppComponent {
   }
 
   setCard() {
-    this.user = this.service.getUser();
+    //this.user = this.service.getUser();
     if (this.user) this.card = this.user.currentDeck[0];
   }
 }
