@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Card, User } from 'src/model/model';
 import { HiraganaService } from 'src/services/hiragana-service.service';
 
 @Component({
@@ -8,17 +9,31 @@ import { HiraganaService } from 'src/services/hiragana-service.service';
 })
 export class AppComponent {
   title = 'hiraganalearningsite';
-
+  card: Card;
+  user:User;
   answer: string = "";
   constructor(public service :HiraganaService) {
     console.log(new Date().getHours())
+    this.setCard()
   }
 
-
-  testGetCard() {
-    this.service.getWords(3);
-  }
   submitanswer(){
+    let answer = this.service.submit(this.answer);
+    if (answer == false) {
+      alert('wrong');
+    } else {
+      this.setCard();
+      this.answer = "";
+    }
+  }
 
+  newProfile() {
+    this.service.createNewUserProfile();
+    this.user = this.service.getUser();
+  }
+
+  setCard() {
+    this.user = this.service.getUser();
+    if (this.user) this.card = this.user.currentDeck[0];
   }
 }

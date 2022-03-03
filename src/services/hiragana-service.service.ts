@@ -12,7 +12,13 @@ export class HiraganaService{
   data = [...json_data];
   user$ = new BehaviorSubject<User>(null);
 
-  constructor() { }
+  constructor() { 
+    let profile = JSON.parse(localStorage.getItem('hiragana_user'));
+    if (profile) {
+      this.user$.next(new User(profile));
+      console.log(this.user$.value);
+    }
+  }
 
   getWords(progress: number) {
     let init_deck = this.getInitialDeckFromJson(progress);
@@ -217,26 +223,27 @@ export class HiraganaService{
 
   }
 
-  submit(answer){
+  submit(answer): any{
+    let isCorrect = true;
     let user = { ...this.user$.value };
     let date_now = new Date();
-    //Check cooldown time
-    if (date_now.getTime() < user.cooldownTimer.getTime()) {
-      let remain_time = user.cooldownTimer.getTime() - date_now.getTime();
-      alert(`Please wait ${remain_time / 1000 / 60} mins for your next level.`);
-      return;
-    }
 
-    //If the current Time is over the finishTime, redo whole process
+     //If the current Time is over the finishTime, redo whole process
+     let date_finished = user.finishTimer;
+     if (date_now.getTime() > date_finished.getTime()) {
+       let new_finish_time = date_now;
+       let new_deck = this.getWords(user.progress);
+       user.currentDeck = new_deck;
+       new_finish_time.setHours(new_finish_time.getHours() + 1);
+       user.finishTimer = new_finish_time;
+       this.user$.next(user);
+       return;
+     }
     
-    let date_finished = user.finishTimer;
-    if (date_now.getTime() > date_finished.getTime()) {
-      let new_finish_time = date_now;
-      let new_deck = this.getWords(user.progress);
-      user.currentDeck = new_deck;
-      new_finish_time.setHours(new_finish_time.getHours() + 1);
-      user.finishTimer = new_finish_time;
-      this.user$.next(user);
+    //Check cooldown time
+    if (user.cooldownTimer && date_now.getTime() < user.cooldownTimer.getTime()) {
+      let remain_time = user.cooldownTimer.getTime() - date_now.getTime();
+      alert(`Please wait ${Math.floor(remain_time / 1000 / 60)} mins for your next level.`);
       return;
     }
 
@@ -253,7 +260,7 @@ export class HiraganaService{
           user.currentDeck.push(user.currentDeck[0]);
         }
       } 
-      return;
+      isCorrect = false;
     }
 
     //If the current Deck is running out...
@@ -266,14 +273,22 @@ export class HiraganaService{
         date_now.setHours(date_now.getHours() + 3);
         user.cooldownTimer = date_now;
       }
-      user.progress = user.progress++
+      user.progress = user.progress + 1
       let new_deck = this.getWords(user.progress);
       user.currentDeck = new_deck;
       user.usedDeck = [];
     }
 
-    return;
+    //Update User
+    this.setUser(user);
+
+    if (isCorrect) {
+      return true;
+    } else {
+      return false;
+    }
   }
+
 
   
 
@@ -302,5 +317,10 @@ export class HiraganaService{
 
     //Run Finish Time Clock
 
+  }
+
+  setUser(profile) {
+    this.user$.next(profile);
+    localStorage.setItem('hiragana_user', JSON.stringify(profile));
   }
 }

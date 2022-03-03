@@ -17,7 +17,7 @@ export class CardComponent implements OnInit {
 
 
   getSrc(): string {
-    return '/assets/img/cards/' + this.card.answer.toLowerCase() + '.png';
+    return '/assets/img/words/' + this.card?.answer.toLowerCase() + '.png';
   }
 
 }

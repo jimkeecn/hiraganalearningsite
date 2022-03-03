@@ -1,21 +1,25 @@
 <div class="panel">
-  <div class="row">
+  <div class="row" *ngIf="!user">
     <label>Select Level</label>
     <select>
       <option>Progresive</option>
-      <option>All</option>
+      <option>All(Not supported)</option>
     </select>
+    <button type="button" (click)="newProfile()">Start</button>
   </div>
 </div>
-<div class="progress-bar">
-  <span class="bar">100%</span>
-</div>
-<div class="body">
-  <card></card>
-  <div class="input">
-    <input type="text" [(ngModel)]="answer">
-</div>
-<div class="action">
-    <button class="button" (click)="submitanswer()">Submit</button>
-</div>
-</div>  
+<ng-container *ngIf="user">
+  <div class="progress-bar">
+    <div>{{user.progress * 5}}% / remaining words : {{user.currentDeck.length}}</div>
+    <span class="bar" [style.width.%]="user.progress * 5"></span>
+  </div>
+  <div class="body">
+    <card [card]="card"></card>
+    <div class="input">
+      <input type="text" [(ngModel)]="answer">
+  </div>
+  <div class="action">
+      <button class="button" (click)="submitanswer()">Submit</button>
+  </div>
+  </div>  
+</ng-container>
