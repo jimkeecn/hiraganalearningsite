@@ -23,7 +23,7 @@ export class AppComponent {
   }
 
   submitanswer(){
-    let answer = this.service.submit(this.answer);
+    let answer = this.service.submit(this.answer.toLowerCase());
     if (answer == false) {
       alert('wrong');
     } else {
